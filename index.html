@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conic AI - ระบบสอนภาคตัดกรวย</title>
+    <script src="https://www.desmos.com/api/v1.8/calculator.js?apiKey=dcb31709b452b1cf9dc2697214f3e9a0"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="container mx-auto p-5">
+        <h1 class="text-3xl font-bold text-center text-blue-600 mb-5">Conic Sections Learning App</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="bg-white p-6 rounded-lg shadow-md border-t-4 border-blue-500">
+                <h2 class="text-xl font-semibold mb-4">ใส่สมการของคุณ</h2>
+                <input type="text" id="eqInput" placeholder="เช่น x^2 + y^2 = 25" 
+                    class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-blue-400">
+                
+                <button onclick="updateGraph()" 
+                    class="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+                    วาดกราฟและวิเคราะห์
+                </button>
+
+                <div id="aiAnalysis" class="mt-6 p-4 bg-blue-50 rounded hidden">
+                    <h3 class="font-bold text-blue-800 italic">🤖 AI วิเคราะห์:</h3>
+                    <p id="analysisText" class="text-gray-700 mt-2"></p>
+                </div>
+            </div>
+
+            <div class="md:col-span-2 bg-white p-2 rounded-lg shadow-md" style="height: 500px;">
+                <div id="calculator" style="width: 100%; height: 100%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // เริ่มต้นสร้างเครื่องคิดเลขกราฟ
+        const elt = document.getElementById('calculator');
+        const calculator = Desmos.GraphingCalculator(elt, { keypad: false });
+
+        function updateGraph() {
+            const eq = document.getElementById('eqInput').value;
+            const analysisDiv = document.getElementById('aiAnalysis');
+            const analysisText = document.getElementById('analysisText');
+
+            if (eq) {
+                // วาดกราฟลงบนหน้าจอ
+                calculator.setExpression({ id: 'graph1', latex: eq });
+
+                // จำลองตรรกะ AI เบื้องต้น (เดี๋ยวเราจะเชื่อม API จริงในภายหลัง)
+                analysisDiv.classList.remove('hidden');
+                
+                if (eq.includes('x^2') && eq.includes('y^2')) {
+                    if (eq.includes('+')) {
+                        analysisText.innerText = "นี่คือรูปทรง 'วงกลม' หรือ 'วงรี' สังเกตว่ามีกำลังสองทั้ง x และ y และเครื่องหมายตรงกลางเป็นบวกครับ";
+                    } else if (eq.includes('-')) {
+                        analysisText.innerText = "นี่คือ 'ไฮเพอร์โบลา' เพราะเครื่องหมายระหว่าง x^2 และ y^2 เป็นลบครับ";
+                    }
+                } else if (eq.includes('x^2') || eq.includes('y^2')) {
+                    analysisText.innerText = "นี่คือ 'พาราโบลา' เพราะมีตัวแปรหนึ่งที่มีกำลังสองเพียงตัวเดียวครับ";
+                } else {
+                    analysisText.innerText = "ระบุสมการไม่ชัดเจน ลองใช้รูปแบบ x^2 + y^2 = 9 ดูนะครับ";
+                }
+            }
+        }
+    </script>
+</body>
+</html>
